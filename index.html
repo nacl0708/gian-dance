@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gian 댄스 연습</title>
+<style>
+  :root { --bg:#101418; --panel:#1a2027; --fg:#f2f4f6; --muted:#9aa6b2; --accent:#ffb347; color-scheme:dark; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.5 -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+         padding-block:20px 40px; padding-left:max(16px, env(safe-area-inset-left,0px)); padding-right:max(16px, env(safe-area-inset-right,0px)); }
+  header { max-width:720px; margin:0 auto 20px; }
+  h1 { font-size:1.5rem; margin:0 0 6px; }
+  header p { margin:0; color:var(--muted); font-size:.95rem; }
+  main { max-width:720px; margin:0 auto; display:grid; gap:28px; }
+  section { background:var(--panel); border-radius:14px; padding:14px; }
+  .top { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; }
+  h2 { font-size:1.05rem; margin:0; min-width:0; }
+  h2 small { display:block; color:var(--muted); font-weight:400; font-size:.85rem; }
+  .frame { position:relative; width:100%; aspect-ratio:16/9; max-width:100%; border-radius:10px; overflow:hidden; background:#000; }
+  .frame iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
+  .frame.mirror iframe { transform:scaleX(-1); }
+  .controls { display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
+  button, a.btn { font:inherit; font-size:.9rem; padding:8px 14px; border-radius:999px; border:1px solid var(--muted); background:transparent; color:var(--fg); text-decoration:none; cursor:pointer; }
+  button.on { background:var(--accent); border-color:var(--accent); color:#1a1200; font-weight:600; }
+  button:focus-visible, a.btn:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+  h3.group { margin:8px 0 -12px; font-size:.95rem; color:var(--accent); letter-spacing:.02em; }
+  footer { max-width:720px; margin:28px auto 0; color:var(--muted); font-size:.85rem; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Gian 댄스 연습 (거울 모드)</h1>
+  <p>영상이 좌우로 뒤집혀 있어서 화면 속 오른손이 내 오른손입니다. 글자가 거꾸로 보이는 건 정상이에요.</p>
+</header>
+<main id="list"></main>
+<footer>전체화면으로 보면 거울 모드가 풀릴 수 있어요. 세로로 들고 그대로 보거나 폰을 가로로 돌려서 보세요.</footer>
+<script>
+  const songs = [
+    ["noUUDYZI3ZU", "He Is God", "Jana Alayra", "10/18 First Practice"],
+    ["GVV2VZhkSHY", "You Say I am Your Treasure", "Jana Alayra", "10/18 First Practice"],
+    ["c12Ta6_WJrw", "Lord I Lift Your Name on High", "kidzworld777", "10/18 First Practice"],
+    ["8T0HWO8yQAI", "Stand Together", "Kingdom Rock VBS", "10/25 Practice"],
+    ["Dj0rcLo0m2A", "Count Your Blessings", "Scuba VBS", "10/25 Practice"],
+    ["29IxnsqOkmQ", "Way Maker", "Leeland (Lyric Video)", "10/25 Practice"],
+  ];
+  const list = document.getElementById("list");
+  let lastGroup = "";
+  songs.forEach(([id, title, by, group], i) => {
+    if (group !== lastGroup) {
+      const h = document.createElement("h3");
+      h.className = "group";
+      h.textContent = group + " (FFF 연습)";
+      list.appendChild(h);
+      lastGroup = group;
+    }
+    const s = document.createElement("section");
+    s.innerHTML = `
+      <div class="top"><h2>${i + 1}. ${title}<small>${by}</small></h2></div>
+      <div class="frame mirror" id="f${i}">
+        <iframe src="https://www.youtube-nocookie.com/embed/${id}?playsinline=1&rel=0" title="${title}"
+          allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="controls">
+        <button class="on" id="b${i}" type="button">거울 모드 켜짐</button>
+        <a class="btn" href="https://www.youtube.com/watch?v=${id}" target="_blank" rel="noopener">YouTube에서 열기</a>
+      </div>`;
+    list.appendChild(s);
+    const f = s.querySelector(`#f${i}`), b = s.querySelector(`#b${i}`);
+    b.addEventListener("click", () => {
+      const on = f.classList.toggle("mirror");
+      b.classList.toggle("on", on);
+      b.textContent = on ? "거울 모드 켜짐" : "거울 모드 꺼짐";
+    });
+  });
+</script>
+</body>
+</html>
